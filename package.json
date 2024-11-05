@@ -2,7 +2,7 @@
   "name": "task5-part2",
   "version": "1.0.0",
   "scripts": {
-    "test": "jest --config jest.config.js",
+    "test": "node ./node_modules/.bin/jest --config jest.config.js",
     "dev": "nodemon src/app.ts"
   },
   "keywords": [],
