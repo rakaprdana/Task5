@@ -19,9 +19,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Fix Permissions
-        run: chmod +x ./node_modules/.bin/jest
-
       - name: Checkout repository
         uses: actions/checkout@v3
 
