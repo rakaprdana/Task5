@@ -7,7 +7,6 @@ import session from "express-session";
 import swaggerUi from "swagger-ui-express";
 import swaggerDocument from "./swagger/swagger";
 
-// Load environment variables
 dotenv.config();
 
 const app: Express = express();
