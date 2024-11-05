@@ -16,11 +16,7 @@ export class BookController {
         data: books,
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      });
+      res.status(500).json({ error });
     }
   };
 
@@ -47,11 +43,7 @@ export class BookController {
         data: book,
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      });
+      res.status(500).json({ error });
     }
   };
 
@@ -63,11 +55,7 @@ export class BookController {
         data: book,
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      });
+      res.status(500).json({ error });
     }
   };
 
@@ -94,11 +82,7 @@ export class BookController {
         data: updatedBook,
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      });
+      res.status(500).json({ error });
     }
   };
 
@@ -125,11 +109,7 @@ export class BookController {
         message: "Book deleted successfully",
       });
     } catch (error) {
-      res.status(500).json({
-        success: false,
-        error:
-          error instanceof Error ? error.message : "Unknown error occurred",
-      });
+      res.status(500).json({ error });
     }
   };
 }

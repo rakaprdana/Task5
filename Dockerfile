@@ -1,5 +1,5 @@
 # Gunakan node versi LTS
-FROM node:18-alpine
+FROM node:18-bullseye
 
 # Buat direktori app
 WORKDIR /usr/src/app
@@ -12,7 +12,7 @@ RUN npm ci
 COPY . .
 
 # Expose port yang digunakan aplikasi
-EXPOSE 3000
+EXPOSE 5000
 
 # Command untuk menjalankan aplikasi
 CMD ["npm", "test"]
