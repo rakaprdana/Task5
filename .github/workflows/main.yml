@@ -11,8 +11,8 @@ on:
       - master
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  MONGO_URI: ${{ secrets.MONGODB_URI }}
+  SECRET_KEY: ${{ secrets.SECRET_KEY }}
 
 jobs:
   build-and-test:
@@ -22,62 +22,36 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Log in to GitHub Container registry
-        uses: docker/login-action@v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          node-version: "20"
 
-      - name: Build and test
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          load: true
-          tags: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+      - name: Install dependencies
+        run: npm install
 
-  deploy:
+      - name: Run unit tests
+        run: npm test
+  docker-build-and-push-image:
     needs: build-and-test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GitHub Container registry
-        uses: docker/login-action@v2
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ vars.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v4
+      - name: Build and push to Docker
+        uses: docker/build-push-action@v6
         with:
-          context: .
           push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Deploy to production
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.PROD_HOST }}
-          username: ${{ secrets.PROD_USERNAME }}
-          key: ${{ secrets.PROD_SSH_KEY }}
-          script: |
-            cd /opt/app
-            docker-compose pull
-            docker-compose up -d
+          tags: rakaprdana/task5-part2-app:latest
