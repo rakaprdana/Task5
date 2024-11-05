@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  app:
+    build: .
+    environment:
+      - NODE_ENV=test
+      - MONGODB_URI=mongodb+srv://rakapradana1103:HoI6nJEEfNT3akdy@cluster-test.npvte.mongodb.net/test?retryWrites=true&w=majority&appName=Cluster-test
+    depends_on:
+      - mongodb
+    command: npm test
+    networks:
+      - test-network
+
+  mongodb:
+    image: mongo:5.0
+    networks:
+      - test-network
+
+networks:
+  test-network:
+    driver: bridge
